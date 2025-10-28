@@ -1,0 +1,11 @@
+{% extends "base.html" %} 
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+{% endblock %}
+{% block header %}
+    <div class="header">
+        <h1>🔍 WhatsApp Mock API - Traffic Dashboard</h1>
+        <p>Real-time monitoring of all API requests</p>
+    </div>
+{% endblock %}

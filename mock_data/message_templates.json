@@ -1,0 +1,66 @@
+[
+  {
+    "name": "template_name",
+    "components": [
+      {
+        "type": "BODY",
+        "text": "Hello!"
+      }
+    ],
+    "language": "en",
+    "status": "APPROVED",
+    "category": "UTILITY",
+    "id": "000000000000001",
+    "quality_score": {
+      "score": "unknown"
+    }
+  },
+  {
+    "name": "test_2",
+    "components": [
+      {
+        "type": "BODY",
+        "text": "hello test 2"
+      }
+    ],
+    "language": "en_US",
+    "status": "APPROVED",
+    "category": "MARKETING",
+    "id": "7932357952334293",
+    "quality_score": {
+      "score": "unknown"
+    }
+  },
+  {
+    "name": "test_3",
+    "components": [
+      {
+        "type": "BODY",
+        "text": "hello test 2"
+      }
+    ],
+    "language": "en_US",
+    "status": "APPROVED",
+    "category": "MARKETING",
+    "id": "8123249380420227",
+    "quality_score": {
+      "score": "unknown"
+    }
+  },
+  {
+    "name": "test_4",
+    "components": [
+      {
+        "type": "BODY",
+        "text": "hello test 2"
+      }
+    ],
+    "language": "en_US",
+    "status": "APPROVED",
+    "category": "MARKETING",
+    "id": "6668325432417575",
+    "quality_score": {
+      "score": "unknown"
+    }
+  }
+]

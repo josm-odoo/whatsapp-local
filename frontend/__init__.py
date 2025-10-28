@@ -1,0 +1,1 @@
+from .frontend import register_frontend_routes

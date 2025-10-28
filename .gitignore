@@ -1,0 +1,65 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Nginx
+nginx/logs/
+nginx/*.pid
+nginx/client_body_temp/
+nginx/proxy_temp/
+nginx/fastcgi_temp/
+nginx/uwsgi_temp/
+nginx/scgi_temp/
+
+# SSL Certificates (if you regenerate them)
+# nginx/ssl/*.key
+# nginx/ssl/*.crt
+# nginx/ssl/*.csr
+
+# Flask
+instance/
+.webassets-cache
+
+# Environment variables
+.env
+.env.local
+
+# Logs
+*.log
+
+# Mock data that might contain sensitive info
+# mock_data/*.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Temporary files
+*.tmp
+*.bak
