@@ -1,6 +1,6 @@
 # Odoo WhatsApp Test Suite
-This is to help Odoo Engineers debug Whatsapp integrartion becuase Facebook is tough to get and keep credentials for.
-** This Project Assumes the whatsapp and facebook data and responces are correct and there is an issue inside Odoo **
+This is to help Odoo Engineers debug WhatsApp integration because Facebook is tough to get and keep credentials for.
+** This Project assumes the WhatsApp and Facebook data and responses are correct, and there is an issue inside Odoo. **
 
 ### Prerequisites
 
@@ -10,17 +10,17 @@ This is to help Odoo Engineers debug Whatsapp integrartion becuase Facebook is t
 ## Setup
 
 1. Start The Odoo WhatsApp Integration Test Suite
-2. Inside Odoo source code change the DEFAULT_ENDPOINT
+2. Inside Odoo source code, change the DEFAULT_ENDPOINT
    a. Find in Path - ./dev/src/enterprise/whatsapp
    b. file path /Users/josephmaiarana/odoo/universe/dev/src/enterprise/whatsapp/tools/whatsapp_api.py
    c. change "https://graph.facebook.com" to "http://localhost:5001"
-3. Inside the database Install WhatsApp, Contacts and anyother Apps necessary
-4) Go to Whatsapp > Configurations > Whatsapp Business Accounts > Set all the necessary fields to the fields displayed on the webpage. Currently everything is set to "11111111" but can be changed it configs/config.py
-5) Click "Test Credentials" >  wait for it to return > Click "Sync Templates" * Templates are set with the template name, if the templates have conflicting names it with give the "No duplicates (paraphrased)" Error. Just change the names in mock_data/message_templates.json
+3. Inside the database, install WhatsApp, Contacts, and any other Apps necessary
+4) Go to WhatsApp> Configurations > WhatsApp Business Accounts > Set all the necessary fields to the fields displayed on the webpage. Currently everything is set to "11111111" but can be changed it configs/config.py
+5) Click "Test Credentials" >  wait for it to return > Click "Sync Templates" * Templates are set with the template name, if the templates have conflicting names, it with give the "No duplicates (paraphrased)" Error. Just change the names in mock_data/message_templates.json
 
 
 ## Phone Numbers
-- I haver added some fake US numbers inside test-numbers.md please feel free to add more
+- I have added some fake US numbers inside test-numbers.MD, please feel free to add more
 
 ## Mocked WhatsApp API Endpoints
 
