@@ -39,6 +39,10 @@ When Odoo calls an endpoint that isn't mocked yet, you'll see it in the catch-al
 2. Add a new route in [main.py](main.py) matching that endpoint
 3. Return appropriate mock data based on WhatsApp API documentation
 
+### Docs
+- https://developers.facebook.com/docs/whatsapp/
+- https://business.whatsapp.com/developers/developer-hub
+
 
 
 
