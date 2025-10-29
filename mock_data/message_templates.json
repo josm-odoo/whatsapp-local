@@ -62,5 +62,21 @@
     "quality_score": {
       "score": "unknown"
     }
+  },
+    {
+    "name": "test_5",
+    "components": [
+      {
+        "type": "BODY",
+        "text": "hello test 2"
+      }
+    ],
+    "language": "en_US",
+    "status": "APPROVED",
+    "category": "MARKETING",
+    "id": "6668325432417575",
+    "quality_score": {
+      "score": "unknown"
+    }
   }
 ]
