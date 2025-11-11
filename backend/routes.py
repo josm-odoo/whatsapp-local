@@ -160,21 +160,27 @@ def register_backend_routes(app):
         waba_id = config.MOCK_WABA_ID
         access_token = config.MOCK_ACCESS_TOKEN
         webhook_token = config.MOCK_WEBHOOK_TOKEN
-
-        logger.info(f"Manual message request - From: {from_number}, To webhook: {webhook_url}")
-                # Validate inputs
-        if not all([webhook_url, phone_number_id, from_number, message_text]):
-            return jsonify({
-                'success': False,
-                'error': 'Missing required fields'
-            }), 400
-        
-        webhook_payload = {
-            "object": "whatsapp_business_account",
-            "entry": [{
-                "id": waba_id if waba_id else phone_number_id,
-                "changes": [{
-                    "value": {
+        parent_msg_id = data.get('parent_msg_id', False)
+        values = values = {
+                "messaging_product": "whatsapp",
+                "metadata": {
+                    "display_phone_number": phone_number_id,
+                    "phone_number_id": phone_number_id
+                },
+                "contacts": [{
+                    "profile": {"name": "Dashboard User"},
+                    "wa_id": from_number
+                }],
+                "messages": [{
+                    "from": from_number,
+                    "id": f"wamid.manual_{random.randint(1000000, 9999999)}",
+                    "timestamp": str(int(time.time())),
+                    "text": {"body": message_text},
+                    "type": "text"
+                }]
+            }      
+        if parent_msg_id:
+            values = {
                         "messaging_product": "whatsapp",
                         "metadata": {
                             "display_phone_number": phone_number_id,
@@ -189,9 +195,29 @@ def register_backend_routes(app):
                             "id": f"wamid.manual_{random.randint(1000000, 9999999)}",
                             "timestamp": str(int(time.time())),
                             "text": {"body": message_text},
-                            "type": "text"
+                            "type": "text",
+                        'context': {
+                            'id': parent_msg_id
+                        }
                         }]
-                    },
+                    }
+    
+
+
+        logger.info(f"Manual message request - From: {from_number}, To webhook: {webhook_url}")
+                # Validate inputs
+        if not all([webhook_url, phone_number_id, from_number, message_text]):
+            return jsonify({
+                'success': False,
+                'error': 'Missing required fields'
+            }), 400
+        
+        webhook_payload = {
+            "object": "whatsapp_business_account",
+            "entry": [{
+                "id": waba_id if waba_id else phone_number_id,
+                "changes": [{
+                    "value": values,
                     "field": "messages"
                 }]
             }]

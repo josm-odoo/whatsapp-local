@@ -84,7 +84,8 @@
         <h3 style="margin-bottom: 10px; color: rgb(252, 0, 63);">📱 Send Manual Webhook Message</h3>
         <form>
             <label for="number">From Phone Number: <input type="text" id="number" name="number"></label><br>
-            <label for="message">Message</label>
+            <label for="parent_msg_id">Parent Message ID: <input type="text" id="parent_msg_id" name="parent_msg_id"></label><br>
+            <label for="message">Message</label><br>
             <textarea id="message" name="message" rows="5" cols="40"></textarea>
             <input id ="message-submit" type="submit" value="Submit" class="webhook-btn" style="margin-top: 10px; color: rgb(0, 55, 252);">
         </form>
@@ -219,6 +220,7 @@
             console.log('Sending manual webhook message...');
             const numberInput = document.getElementById('number');
             const messageInput = document.getElementById('message');
+            const parentMsgIdInput = document.getElementById('parent_msg_id');
             try {
                 const response = await fetch("/send-manual-webhook-message", {
                     method: "POST",
@@ -229,7 +231,8 @@
                         from_phone_number: numberInput.value,
                         message: messageInput.value,
                         type: 'text',
-                        manualSend: true
+                        manualSend: true,
+                        parent_msg_id: parentMsgIdInput.value
                     })
                 });
                 const data = await response.json();
