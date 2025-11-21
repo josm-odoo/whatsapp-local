@@ -39,7 +39,6 @@ async function refreshTrafficLog() {
                         current_templates[template.name] = template;
                     }
                 }
-                // console.log('Current_templates object:', current_templates);
                 const current_template = current_templates?.[body.template.name];
                 messageHTML = template_message
                 .replace("{{body_type}}", body.type)
@@ -47,20 +46,16 @@ async function refreshTrafficLog() {
                 .replace("{{body_language}}", body.template.language.code)
                 .replace("{{body_template_body}}", current_template?.components[0]?.text || 'N/A')
                 .replace("{{body_template_values}}", JSON.stringify(body.template.components[0]?.parameters || {}, null, 2));
-                // console.log('Current templates:', current_template?.components[0]);
                 if (current_template?.components[0]?.example) {
                     let text_body = current_template.components[0].text;
                     const placeholders = current_template.components[0].example.body_text || [];
 
-                    // console.log('Placeholders found:', placeholders);
                    for (let i = 0; i < placeholders.length+1; i++) {
-                    // console.log(i+1);
                     text_body = text_body.replace(`{{${i+1}}}`, body.template.components[0].parameters[i]?.text || `{{nothing to replace index ${i} with}}`);
             
                    }
                     messageHTML = messageHTML.replace("{{body_text_body}}", text_body);
                 } else {
-                    // console.log('No body_text found in template components.');
                     messageHTML = messageHTML.replace("{{body_text_body}}", current_template?.components[0]?.text || 'N/A');
                 }
             } else if (body.type === 'text' && !body.manualSend) {
