@@ -23,10 +23,6 @@ def register_frontend_routes(app,traffic_log):
             mock_waba_id=config.MOCK_WABA_ID,
             mock_access_token=config.MOCK_ACCESS_TOKEN,
             mock_webhook_token=config.MOCK_WEBHOOK_TOKEN)
-
-    @app.route('/traffic-logs', methods=['GET'])
-    def traffic_logs():
-        return jsonify(list(reversed(traffic_log)))
     
     @app.route('/templates/<template_name>')
     def get_template(template_name):
