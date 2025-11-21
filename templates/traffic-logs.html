@@ -1,0 +1,94 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/traffic-logs.css') }}">
+<script src="{{ url_for('static', filename='js/traffic-logs.js') }}"></script>
+<!-- Traffic Logs -->
+<div id="traffic-log-section" class="traffic-log-section">
+    <h2>Recent Traffic Logs</h2>
+    <div id="traffic-logs" class="traffic-logs"></div>
+    <!-- For testing -->
+    <!-- manual -->
+    <!-- <div class="call-card">
+        <div class="call">
+            <div class="timestamp"><strong>Time:</strong> 2025-11-20 14:32:15</div>
+            <div class="host"><strong>Host:</strong> graph.facebook.com</div>
+            <div class="url"><strong>URL:</strong> https://graph.facebook.com/v17.0/123456789/messages</div>
+            <div class="path"><strong>Path:</strong> /v17.0/123456789/messages</div>
+            <div class="method method-post"><strong>Method:</strong> POST</div>
+            <div class="status"><strong>Status:</strong> 200</div>
+
+            <div><strong>Headers:</strong>
+                <div class="headers">
+                    <div class="header-item"><span class="header-key">Authorization:</span> Bearer EAAG...</div>
+                    <div class="header-item"><span class="header-key">Content-Type:</span> application/json</div>
+                </div>
+            </div>
+        </div>
+        <div class="divider"></div>
+            <div class="message">
+                <div class="message message-manual-send">
+                    <div class="message-type"><strong>Type:</strong> text</div>
+                    <div class="message-text-body"><strong>Message:</strong>
+                        <pre>Hello! This is a test message sent manually.</pre>
+                    </div>
+                </div>
+            </div>
+    </div> -->
+    <!-- recieve -->
+    <!-- <div class="call-card">
+        <div class="call">
+            <div class="timestamp"><strong>Time:</strong> 2025-11-20 14:28:42</div>
+            <div class="host"><strong>Host:</strong> localhost:5000</div>
+            <div class="url"><strong>URL:</strong> http://localhost:5000/webhook</div>
+            <div class="path"><strong>Path:</strong> /webhook</div>
+            <div class="method method-post"><strong>Method:</strong> POST</div>
+            <div class="status"><strong>Status:</strong> 200</div>
+
+            <div><strong>Headers:</strong>
+                <div class="headers">
+                    <div class="header-item"><span class="header-key">X-Hub-Signature-256:</span> sha256=abc123...</div>
+                    <div class="header-item"><span class="header-key">Content-Type:</span> application/json</div>
+                    <div class="header-item"><span class="header-key">User-Agent:</span> facebookplatform/1.0</div>
+                </div>
+            </div>
+        </div>
+        <div class="divider"></div>
+        <div class="message">
+            <div class="message message-text">
+                <div class="message-type"><strong>Type:</strong> text</div>
+                <div class="message-text-body"><strong>From:</strong>
+                    <pre>+1234567890</pre>
+                </div>
+                <div class="message-text-body"><strong>Message:</strong>
+                    <pre>Thanks for the info! Can you send me more details?</pre>
+                </div>
+            </div>
+        </div>
+    </div> -->
+    <!-- template -->
+    <!-- <div class="call-card">
+        <div class="call">
+            <div class="timestamp"><strong>Time:</strong> 2025-11-20 14:35:09</div>
+            <div class="host"><strong>Host:</strong> graph.facebook.com</div>
+            <div class="url"><strong>URL:</strong> https://graph.facebook.com/v17.0/123456789/messages</div>
+            <div class="path"><strong>Path:</strong> /v17.0/123456789/messages</div>
+            <div class="method method-post"><strong>Method:</strong> POST</div>
+            <div class="status"><strong>Status:</strong> 200</div>
+
+            <div><strong>Headers:</strong>
+                <div class="headers">
+                    <div class="header-item"><span class="header-key">Authorization:</span> Bearer EAAG...</div>
+                    <div class="header-item"><span class="header-key">Content-Type:</span> application/json</div>
+                </div>
+            </div>
+        </div>
+        <div class="divider"></div>
+        <div class="message">
+            <div class="message message-template">
+                <div class="message-type"><strong>Type:</strong> template</div>
+                <div class="message-template-name"><strong>Template Name:</strong> welcome_message</div>
+                <div class="message-language"><strong>Language:</strong> en_US</div>
+            </div>
+        </div> 
+    </div> -->
+    <!-- ABove for testing -->
+
+</div>

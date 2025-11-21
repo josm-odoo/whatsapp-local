@@ -63,7 +63,7 @@
       "score": "unknown"
     }
   },
-    {
+  {
     "name": "test_5",
     "components": [
       {
@@ -75,6 +75,101 @@
     "status": "APPROVED",
     "category": "MARKETING",
     "id": "6668325432417575",
+    "quality_score": {
+      "score": "unknown"
+    }
+  },
+  {
+    "name": "test_6",
+    "components": [
+      {
+        "type": "BODY",
+        "text": "hello {{1}}",
+        "example": {
+          "body_text": [
+            [
+              "Sample Value"
+            ]
+          ]
+        }
+      }
+    ],
+    "language": "en_US",
+    "status": "APPROVED",
+    "category": "MARKETING",
+    "id": "7577583953833069",
+    "quality_score": {
+      "score": "unknown"
+    }
+  },
+  {
+    "name": "test_mass_mailing_phone_mobile_from_mass_mailing_sms",
+    "components": [
+      {
+        "type": "BODY",
+        "text": "hello {{1}}, number : {{2}}",
+        "example": {
+          "body_text": [
+            [
+              "Sample Value",
+              "Sample Value"
+            ]
+          ]
+        }
+      }
+    ],
+    "language": "en_US",
+    "status": "APPROVED",
+    "category": "MARKETING",
+    "id": "4737311469178599",
+    "quality_score": {
+      "score": "unknown"
+    }
+  },
+  {
+    "name": "test_sms_2",
+    "components": [
+      {
+        "type": "BODY",
+        "text": "hello {{1}}, number : {{2}}",
+        "example": {
+          "body_text": [
+            [
+              "Sample Value",
+              "Sample Value"
+            ]
+          ]
+        }
+      }
+    ],
+    "language": "en_US",
+    "status": "APPROVED",
+    "category": "MARKETING",
+    "id": "3833779158958328",
+    "quality_score": {
+      "score": "unknown"
+    }
+  },
+  {
+    "name": "contact_test_with_name_and_mobile_number",
+    "components": [
+      {
+        "type": "BODY",
+        "text": "Hello {{1}},\n\nIt is great to see your number is still {{2}}",
+        "example": {
+          "body_text": [
+            [
+              "Sample Value",
+              "Sample Value"
+            ]
+          ]
+        }
+      }
+    ],
+    "language": "en_US",
+    "status": "APPROVED",
+    "category": "MARKETING",
+    "id": "5102205943774656",
     "quality_score": {
       "score": "unknown"
     }

@@ -11,19 +11,16 @@
     <!-- Additional page-specific styles -->
     {% block extra_css %}{% endblock %}
 </head>
-<body>
-    {% block header %}
-        {% include 'header.html' %}
-    {% endblock %}
+    <body>
+        {% block header %}
+            {% include 'header.html' %}
+        {% endblock %}
 
-    {% block content %}
-    <!-- Page content goes here -->
-    {% endblock %}
+        {% block content %}
+        <!-- Page content goes here -->
+         {% endblock %}
 
-    <!-- Load JavaScript from static folder -->
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-
-    <!-- Additional page-specific scripts -->
-    {% block extra_js %}{% endblock %}
-</body>
+        <!-- Additional page-specific scripts -->
+        {% block extra_js %}{% endblock %}
+    </body>
 </html>

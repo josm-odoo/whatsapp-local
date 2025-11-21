@@ -1,7 +1,8 @@
 .header {
-    background: #25D366;
-    color: white;
+    background: var(--light-glow);
+    color: var(--primary-color);
     padding: 20px;
     border-radius: 8px;
     margin-bottom: 20px;
+    text-align: center;
 }

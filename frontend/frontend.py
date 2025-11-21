@@ -28,3 +28,18 @@ def register_frontend_routes(app,traffic_log):
     def traffic_logs():
         return jsonify(list(reversed(traffic_log)))
     
+    @app.route('/templates/<template_name>')
+    def get_template(template_name):
+        template_path = Path('templates') / template_name
+        if template_path.exists() and template_path.is_file():
+            with open(template_path, 'r') as file:
+                return file.read()
+        return "Template not found", 404
+    
+    @app.route('/message-templates')
+    def get_whatsapp_template():
+        template_path = Path('mock_data') / 'message_templates.json'
+        if template_path.exists() and template_path.is_file():
+            with open(template_path, 'r') as file:
+                return file.read()
+        return "Template not found", 404

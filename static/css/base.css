@@ -1,3 +1,17 @@
+:root {
+  --primary-color: #8B008B;        /* Dark purple */
+  --secondary-color: #FF69B4;      /* Pink */
+  --tertiary-color: #483D8B;       /* Indigo */
+
+  --background-color: #1C1C2D;     /* Deep dark purple */
+  --light-glow: #E6E6FA;           /* Soft white glow */
+  --transparent: transparent;
+  --white: #FFFFFF;
+  --grey: #808080;
+
+}
+
+
 * {
     margin: 0;
     padding: 0;
@@ -6,6 +20,16 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-    background: #f5f5f5;
+    background: var(--background-color);
     padding: 20px;
+}
+
+.submit-button{
+    background-color: var(--primary-color);
+    color: var(--light-glow);
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
 }
