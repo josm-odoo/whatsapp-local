@@ -11,7 +11,8 @@ This is to help Odoo Engineers debug WhatsApp integration because Facebook is to
 - Python 3.12.3
 - VS Code with Python extension
 
-## Setup
+## Setup 
+I like to run this in a second VSCode window, with the debugger. But it can be ran by running the main.py
 
 1. Start The Odoo WhatsApp Integration Test Suite
 2. Inside Odoo source code, change the DEFAULT_ENDPOINT
@@ -19,7 +20,7 @@ This is to help Odoo Engineers debug WhatsApp integration because Facebook is to
    b. file path /Users/josephmaiarana/odoo/universe/dev/src/enterprise/whatsapp/tools/whatsapp_api.py
    c. change "https://graph.facebook.com" to "http://localhost:5001"
 3. Inside the database, install WhatsApp, Contacts, and any other Apps necessary
-4) Go to WhatsApp> Configurations > WhatsApp Business Accounts > Set all the necessary fields to the fields displayed on the webpage. Currently everything is set to "11111111" but can be changed it configs/config.py
+4) Go to WhatsApp> Configurations > WhatsApp Business Accounts > Set all the necessary fields to the fields displayed on the webpage. Currently, everything is set to "11111111" but can be changed it configs/config.py
 5) Click "Test Credentials" >  wait for it to return > Click "Sync Templates" * Templates are set with the template name, if the templates have conflicting names, it with give the "No duplicates (paraphrased)" Error. Just change the names in mock_data/message_templates.json
 
 
