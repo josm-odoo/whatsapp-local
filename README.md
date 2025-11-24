@@ -2,7 +2,9 @@
 This is to help Odoo Engineers debug WhatsApp integration because Facebook is tough to get and keep credentials for.
 ** This Project assumes the WhatsApp and Facebook data and responses are correct, and there is an issue inside Odoo. **
 
-[Click Here For the Demo](https://drive.google.com/file/d/1i9haHfBM44xwlZpBWAkjsCHGTHJrfFSL/view?usp=sharing)
+[Click Here For the First Demo](https://drive.google.com/file/d/1kp80Fc9kzM15d5Oft152RMvaWgkYyT_f/view?usp=drive_link)
+
+[Click Here For the Second Demo](https://drive.google.com/file/d/1IzmBtPKzOvHU_NyQj6HbVKjtqE7J4EEg/view?usp=drive_link)
 
 ### Prerequisites
 
