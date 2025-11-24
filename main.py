@@ -8,10 +8,6 @@ from backend.routes import register_backend_routes, register_backend_routes
 
 from flask_socketio import SocketIO, emit
 
-# Import our modules
-# from dashboard.dashboard import create_dashboard_route
-# from webhook.routes import register_backend_routes
-
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
