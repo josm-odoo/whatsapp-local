@@ -173,5 +173,88 @@
     "quality_score": {
       "score": "unknown"
     }
+  },
+  {
+    "name": "online_order_abandoned_cart_500_off_1_copy",
+    "components": [
+      {
+        "type": "BODY",
+        "text": "\ud83d\udcc5 *Hurry! Offer valid only till 15th July.*\n\n\ud83c\udf3f Hey {{1}},\n*Your Green Picks Are Waiting! \ud83d\uded2*\nWe noticed you left some beautiful plants in your cart \u2014 and guess what? It\u2019s the perfect time to bring them home! \ud83e\udeb4\u2728\n\n\ud83d\udcb8 Enjoy *\u20b9500 OFF* on orders \u20b92500 & above \u2014 just our way of saying thank you for choosing green with us! \ud83c\udf31\n*\ud83d\ude9a Plus, get superfast delivery within 24 hours!*\n\nAdd a touch of nature to your home, office, or balcony and let your space thrive. \ud83c\udf3c\n\nNeed help or ready to grab your deal?\n\ud83d\udcf2 Just reply *\u201cGET DEAL\u201d* and we\u2019ll guide you!\n\n\ud83c\udf1f Don\u2019t let your plants wait \u2014 return to your cart and complete your order now.\n\nWarm regards,\nTeam Jagtap Nursery\u2019s Garden Center",
+        "example": {
+          "body_text": [
+            [
+              "Satyajeet Dandwate"
+            ]
+          ]
+        }
+      },
+      {
+        "type": "BUTTONS",
+        "buttons": [
+          {
+            "type": "QUICK_REPLY",
+            "text": "Get Deal!"
+          },
+          {
+            "type": "PHONE_NUMBER",
+            "text": "Need Assistance",
+            "phone_number": "+919011009025"
+          },
+          {
+            "type": "URL",
+            "text": "Complete My Order",
+            "url": "https://www.jagtapnursery.shop/shop/cart{{1}}",
+            "example": "https://www.jagtapnursery.shop/shop/cart???"
+          }
+        ]
+      }
+    ],
+    "language": "en_US",
+    "status": "APPROVED",
+    "category": "MARKETING",
+    "id": "1068688706941670",
+    "quality_score": {
+      "score": "unknown"
+    }
+  },
+  {
+    "name": "online_order_abandoned_cart_500_off_2_copy",
+    "components": [
+      {
+        "type": "BODY",
+        "text": "\ud83c\udf89 Yay! *{{1}}* \n\nHere\u2019s Your Green Deal \ud83c\udf3f\nYou\u2019re just one step away from saving *\u20b9500* on your plant order! \ud83e\udeb4\n\nYour Coupon Code: *{{2}}*\n*Valid till 15th July only*\n\nUse it on checkout for orders *\u20b92500 & above* and enjoy instant savings!\n\nPlus, we\u2019ll deliver your plants within *24 hours* \u2013 fresh and ready to thrive!\n\nNeed help applying the code? We\u2019re just a message away!\n\n*\ud83c\udf31 Let\u2019s grow together,*\n*Team Jagtap Nursery\u2019s Garden Center*",
+        "example": {
+          "body_text": [
+            [
+              "Satyajeet Dandwate",
+              "FLAT-500-OFF"
+            ]
+          ]
+        }
+      },
+      {
+        "type": "BUTTONS",
+        "buttons": [
+          {
+            "type": "PHONE_NUMBER",
+            "text": "Need Assistance",
+            "phone_number": "+919011009025"
+          },
+          {
+            "type": "URL",
+            "text": "Complete My Order",
+            "url": "https://www.jagtapnursery.shop/shop/cart{{1}}",
+            "example": "https://www.jagtapnursery.shop/shop/cart???"
+          }
+        ]
+      }
+    ],
+    "language": "en_US",
+    "status": "APPROVED",
+    "category": "MARKETING",
+    "id": "7195922590744941",
+    "quality_score": {
+      "score": "unknown"
+    }
   }
 ]

@@ -17,12 +17,18 @@ def register_frontend_routes(app,traffic_log):
     
     @app.route('/')
     def index():
-        return render_template('index.html', page_title='Home',mock_phone_number_id=config.MOCK_PHONE_NUMBER_ID,
-            mock_app_id=config.MOCK_APP_ID,
-            mock_app_secret=config.MOCK_APP_SECRET,
-            mock_waba_id=config.MOCK_WABA_ID,
-            mock_access_token=config.MOCK_ACCESS_TOKEN,
-            mock_webhook_token=config.MOCK_WEBHOOK_TOKEN)
+        return render_template('index.html', page_title='Home',MOCK_PHONE_NUMBER_ID_1=config.MOCK_PHONE_NUMBER_ID_1,
+            MOCK_APP_ID_1=config.MOCK_APP_ID_1,
+            MOCK_APP_SECRET_1=config.MOCK_APP_SECRET_1,
+            MOCK_WABA_ID_1=config.MOCK_WABA_ID_1,
+            MOCK_ACCESS_TOKEN_1=config.MOCK_ACCESS_TOKEN_1,
+            MOCK_WEBHOOK_TOKEN_1=config.MOCK_WEBHOOK_TOKEN_1,
+            MOCK_PHONE_NUMBER_ID_2=config.MOCK_PHONE_NUMBER_ID_2,
+            MOCK_APP_ID_2=config.MOCK_APP_ID_2,
+            MOCK_APP_SECRET_2=config.MOCK_APP_SECRET_2,
+            MOCK_WABA_ID_2=config.MOCK_WABA_ID_2,
+            MOCK_ACCESS_TOKEN_2=config.MOCK_ACCESS_TOKEN_2,
+            MOCK_WEBHOOK_TOKEN_2=config.MOCK_WEBHOOK_TOKEN_2)
     
     @app.route('/templates/<template_name>')
     def get_template(template_name):
