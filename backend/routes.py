@@ -35,17 +35,17 @@ def register_backend_routes(app):
     def post_uploads(version, phone_number_id):
         '''Mock endpoint for creating upload sessions  '''
         access_token = request.args.get('access_token')
-        if not access_token or access_token != config.MOCK_ACCESS_TOKEN:
+        if not access_token or access_token != config.MOCK_ACCESS_TOKEN_1 and access_token != config.MOCK_ACCESS_TOKEN_2:
             logger.error(f"Invalid or missing access token for phone ID: {phone_number_id}")
             return jsonify({
                 'error': {
-                    'message': 'Invalid OAuth access token.',
+                    'message': 'Invalid OAuth access token. Failed at endpoint "/v<version>/<phone_number_id>/uploads"',
                     'type': 'OAuthException',
                     'code': 190,
                     'fbtrace_id': 'mock_trace_id'
                 }
             }), 401
-        if phone_number_id != config.MOCK_PHONE_NUMBER_ID:
+        if phone_number_id != config.MOCK_PHONE_NUMBER_ID_1 and phone_number_id != config.MOCK_PHONE_NUMBER_ID_2:
             logger.error(f"Phone number ID {phone_number_id} not found.")
             return jsonify({
                 'error': {
@@ -68,10 +68,10 @@ def register_backend_routes(app):
         if auth_header.startswith('Bearer '):
             token = auth_header.replace('Bearer ', '', 1)
 
-        if token != config.MOCK_ACCESS_TOKEN:
+        if token != config.MOCK_ACCESS_TOKEN_1 and token != config.MOCK_ACCESS_TOKEN_2:
             return jsonify({
                 'error': {
-                    'message': 'Invalid OAuth access token.',
+                    'message': 'Invalid OAuth access token. Failed at endpoint /v<version>/<phone_number_id>/message_templates',
                     'type': 'OAuthException',
                     'code': 190,
                     'fbtrace_id': 'mock_trace_id'
@@ -137,30 +137,38 @@ def register_backend_routes(app):
                 }
             }), 200
 
-    @app.route('/set-odoo-whatsapp-webhook', methods=['POST'])
-    def set_odoo_whatsapp_webhook():
+    @app.route('/set-odoo-whatsapp-webhook-account-1', methods=['POST'])
+    def set_odoo_whatsapp_webhook_account_1():
         data = request.json
-        config.MOCK_WEBHOOK_TOKEN = data.get('webhook_token')
-        logger.info(f"Updated webhook token to: {config.MOCK_WEBHOOK_TOKEN}")
+        config.MOCK_WEBHOOK_TOKEN_1 = data.get('webhook_token')
+        logger.info(f"Updated webhook token to: {config.MOCK_WEBHOOK_TOKEN_1}")
+        return jsonify(data)
+    @app.route('/set-odoo-whatsapp-webhook-account-2', methods=['POST'])
+    def set_odoo_whatsapp_webhook_account_2():
+        data = request.json
+        config.MOCK_WEBHOOK_TOKEN_2 = data.get('webhook_token')
+        logger.info(f"Updated webhook token to: {config.MOCK_WEBHOOK_TOKEN_2}")
         return jsonify(data)
     
     @app.route('/send-manual-webhook-message', methods=['POST'])
     def send_manual_webhook():
 
         data = request.json
+        account = data.get('account_type', False)
 
         webhook_url = config.MOCK_WEBHOOK_URL
-        phone_number_id = config.MOCK_PHONE_NUMBER_ID
-        access_token = config.MOCK_ACCESS_TOKEN
-        webhook_token = config.MOCK_WEBHOOK_TOKEN
+        phone_number_id = config.MOCK_PHONE_NUMBER_ID_1 if account == 'account_1' else config.MOCK_PHONE_NUMBER_ID_2
+        access_token = config.MOCK_ACCESS_TOKEN_1 if account == 'account_1' else config.MOCK_ACCESS_TOKEN_2
+        webhook_token = config.MOCK_WEBHOOK_TOKEN_1 if account == 'account_1' else config.MOCK_WEBHOOK_TOKEN_2
         from_number = data.get('from_phone_number')
         message_text = data.get('message')
-        app_secret = config.MOCK_APP_SECRET
-        app_id = config.MOCK_APP_ID
-        waba_id = config.MOCK_WABA_ID
-        access_token = config.MOCK_ACCESS_TOKEN
-        webhook_token = config.MOCK_WEBHOOK_TOKEN
+        app_secret = config.MOCK_APP_SECRET_1 if account == 'account_1' else config.MOCK_APP_SECRET_2
+        app_id = config.MOCK_APP_ID_1 if account == 'account_1' else config.MOCK_APP_ID_2
+        waba_id = config.MOCK_WABA_ID_1 if account == 'account_1' else config.MOCK_WABA_ID_2
+        access_token = config.MOCK_ACCESS_TOKEN_1 if account == 'account_1' else config.MOCK_ACCESS_TOKEN_2
+        webhook_token = config.MOCK_WEBHOOK_TOKEN_1 if account == 'account_1' else config.MOCK_WEBHOOK_TOKEN_2
         parent_msg_id = data.get('parent_msg_id', False)
+       
         values = values = {
                 "messaging_product": "whatsapp",
                 "metadata": {
