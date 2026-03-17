@@ -31,6 +31,18 @@ def register_backend_routes(app):
             }]
         }), 200
     
+    @app.route('/v<version>/<phone_number_id>', methods=['GET'])
+    def get_phonenumber_info(version, phone_number_id):
+        logger.info(f"Get Phone Number Info - Version: {version}, Phone ID: {phone_number_id}")
+        return jsonify({
+            'data': [{
+                'verified_name': 'Whats App Mock Business',
+                'display_phone_number': f"{phone_number_id}",
+                'id': f"{phone_number_id}",
+                'quality_rating': 'GREEN'
+            }]
+        }), 200
+
     @app.route('/v<version>/<phone_number_id>/uploads', methods=['POST'])
     def post_uploads(version, phone_number_id):
         '''Mock endpoint for creating upload sessions  '''

@@ -71,8 +71,10 @@ def log_request():
         'headers': dict(request.headers),
         'body': body,
         'query_params': dict(request.args)
+         
     }
     traffic_log.append(traffic_entry)
+    request._traffic_entry = traffic_entry
     socketio.emit('new_traffic_log', traffic_entry)
 
     # Console logging
@@ -85,6 +87,15 @@ def log_request():
     if body:
         logger.info(f"Body: {body}")
     logger.info(f"========================")
+
+@app.after_request
+def after_request(response):
+    """Update the traffic entry with the response status code"""
+    entry = getattr(request, '_traffic_entry', None)
+    if entry is not None:
+        entry['status_code'] = response.status_code
+        socketio.emit('update_traffic_log', entry)
+    return response
 
 @socketio.on('connect')
 def handle_connect():
