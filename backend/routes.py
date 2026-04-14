@@ -59,7 +59,28 @@ def register_backend_routes(app):
         return jsonify({
             'id': f'upload_session_{random.randint(1000000000, 9999999999)}',
         }), 200
-    
+
+    @app.route('/v<version>/upload_session_<session_id>', methods=['POST'])
+    def resumable_upload(version, session_id):
+        access_token = request.args.get('access_token')
+        if access_token != config.MOCK_ACCESS_TOKEN_1 and access_token != config.MOCK_ACCESS_TOKEN_2:
+            return jsonify({
+                'error': {
+                    'message': 'Invalid OAuth access token.',
+                    'type': 'OAuthException',
+                    'code': 190,
+                    'fbtrace_id': 'mock_trace_id'
+                }
+            }), 401
+        file_length = request.args.get('file_length', '0')
+        file_type = request.args.get('file_type', 'application/octet-stream')
+        logger.info(f"Resumable Upload - Version: {version}, Session: upload_session_{session_id}, "
+                     f"File Length: {file_length}, File Type: {file_type}")
+        import base64
+        handle_data = f"upload_session_{session_id}:{file_type}:{int(time.time())}"
+        mock_handle = f"4:{base64.b64encode(handle_data.encode()).decode()}::{file_type}:ARZ_mock_handle_{session_id}"
+        return jsonify({'h': mock_handle}), 200
+
     @app.route('/v<version>/<phone_number_id>/message_templates', methods=['POST', 'GET'])
     def message_templates(version, phone_number_id):
         # Extract Bearer token from Authorization header
@@ -135,6 +156,78 @@ def register_backend_routes(app):
                         'after': 'MjQZD'
                     }
                 }
+            }), 200
+
+    @app.route('/v<version>/<template_id>', methods=['GET', 'POST'])
+    def template_by_id(version, template_id):
+        auth_header = request.headers.get('Authorization', '')
+        token = None
+        if auth_header.startswith('Bearer '):
+            token = auth_header.replace('Bearer ', '', 1)
+        if token != config.MOCK_ACCESS_TOKEN_1 and token != config.MOCK_ACCESS_TOKEN_2:
+            return jsonify({
+                'error': {
+                    'message': 'Invalid OAuth access token.',
+                    'type': 'OAuthException',
+                    'code': 190,
+                    'fbtrace_id': 'mock_trace_id'
+                }
+            }), 401
+        templates_path = os.path.join(config.ROOT_DIR, "mock_data/message_templates.json")
+        if request.method == 'POST':
+            data = request.get_json()
+            components = data.get('components', [])
+            category = data.get('category')
+            logger.info(f"Update Template - Version: {version}, Template ID: {template_id}")
+            try:
+                with open(templates_path, "r") as f:
+                    templates = json.loads(f.read() or "[]")
+                found = False
+                for t in templates:
+                    if t.get('id') == template_id:
+                        if components:
+                            t['components'] = components
+                        if category:
+                            t['category'] = category
+                        t['status'] = 'APPROVED'
+                        found = True
+                        break
+                if not found:
+                    templates.append({
+                        'id': template_id,
+                        'name': data.get('name', 'unnamed_template'),
+                        'components': components,
+                        'language': data.get('language', 'en_US'),
+                        'status': 'APPROVED',
+                        'category': category or 'UTILITY',
+                        'quality_score': {'score': 'unknown'}
+                    })
+                with open(templates_path, "w") as f:
+                    json.dump(templates, f, indent=2)
+            except Exception as e:
+                logger.error(f"Error updating template: {e}")
+            return jsonify({'success': True}), 200
+        if request.method == 'GET':
+            logger.info(f"Get Template By ID - Version: {version}, Template ID: {template_id}")
+            try:
+                with open(templates_path, "r") as f:
+                    templates = json.loads(f.read() or "[]")
+                for t in templates:
+                    if t.get('id') == template_id:
+                        return jsonify(t), 200
+            except Exception as e:
+                logger.error(f"Error reading template: {e}")
+            # Template not found locally — return a generic approved response
+            # so Odoo's sync sees it as approved
+            logger.info(f"Template {template_id} not in mock data, returning auto-approved response")
+            return jsonify({
+                'id': template_id,
+                'name': 'unknown_template',
+                'components': [],
+                'language': 'en_US',
+                'status': 'APPROVED',
+                'category': 'UTILITY',
+                'quality_score': {'score': 'unknown'}
             }), 200
 
     @app.route('/set-odoo-whatsapp-webhook-account-1', methods=['POST'])
