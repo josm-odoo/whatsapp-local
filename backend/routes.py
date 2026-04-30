@@ -5,23 +5,19 @@ import time
 import hmac
 import hashlib
 import json
-import os
-from datetime import datetime
 from configs import config
-
+from backend.mock_whatsapp import MockWhatsApp
 
 logger = logging.getLogger(__name__)
+mock = MockWhatsApp
 
 
 def register_backend_routes(app):
     """Register all webhook/API routes"""
 
-   
     @app.route('/v<version>/<phone_number_id>/phone_numbers', methods=['GET'])
     def test_connection(version, phone_number_id):
-
         logger.info(f"Get Phone Numbers - Version: {version}, Phone ID: {phone_number_id}")
-
         return jsonify({
             'data': [{
                 'verified_name': 'Whats App Mock Business',
@@ -30,205 +26,62 @@ def register_backend_routes(app):
                 'quality_rating': 'GREEN'
             }]
         }), 200
-    
+
     @app.route('/v<version>/<phone_number_id>/uploads', methods=['POST'])
     def post_uploads(version, phone_number_id):
-        '''Mock endpoint for creating upload sessions  '''
-        access_token = request.args.get('access_token')
-        if not access_token or access_token != config.MOCK_ACCESS_TOKEN_1 and access_token != config.MOCK_ACCESS_TOKEN_2:
-            logger.error(f"Invalid or missing access token for phone ID: {phone_number_id}")
-            return jsonify({
-                'error': {
-                    'message': 'Invalid OAuth access token. Failed at endpoint "/v<version>/<phone_number_id>/uploads"',
-                    'type': 'OAuthException',
-                    'code': 190,
-                    'fbtrace_id': 'mock_trace_id'
-                }
-            }), 401
-        if phone_number_id != config.MOCK_PHONE_NUMBER_ID_1 and phone_number_id != config.MOCK_PHONE_NUMBER_ID_2:
+        '''Mock endpoint for creating upload sessions'''
+        if not mock.validate_access_token_param(request):
+            return jsonify(*mock.oauth_error(
+                'Invalid OAuth access token. Failed at endpoint "/v<version>/<phone_number_id>/uploads"'
+            ))
+        if not mock.is_valid_phone_id(phone_number_id):
             logger.error(f"Phone number ID {phone_number_id} not found.")
-            return jsonify({
-                'error': {
-                    'message': 'Phone number ID not found.',
-                    'type': 'OAuthException',
-                    'code': 100,
-                    'fbtrace_id': 'mock_trace_id'
-                }
-            }), 404
+            return jsonify(*mock.not_found_error('Phone number ID not found.'))
         logger.info(f"Create Upload Session - Version: {version}, Phone ID: {phone_number_id}")
-        return jsonify({
-            'id': f'upload_session_{random.randint(1000000000, 9999999999)}',
-        }), 200
+        return jsonify({'id': mock.generate_upload_session_id()}), 200
 
     @app.route('/v<version>/upload_session_<session_id>', methods=['POST'])
     def resumable_upload(version, session_id):
-        access_token = request.args.get('access_token')
-        if access_token != config.MOCK_ACCESS_TOKEN_1 and access_token != config.MOCK_ACCESS_TOKEN_2:
-            return jsonify({
-                'error': {
-                    'message': 'Invalid OAuth access token.',
-                    'type': 'OAuthException',
-                    'code': 190,
-                    'fbtrace_id': 'mock_trace_id'
-                }
-            }), 401
+        if not mock.validate_access_token_param(request):
+            return jsonify(*mock.oauth_error())
         file_length = request.args.get('file_length', '0')
         file_type = request.args.get('file_type', 'application/octet-stream')
         logger.info(f"Resumable Upload - Version: {version}, Session: upload_session_{session_id}, "
                      f"File Length: {file_length}, File Type: {file_type}")
-        import base64
-        handle_data = f"upload_session_{session_id}:{file_type}:{int(time.time())}"
-        mock_handle = f"4:{base64.b64encode(handle_data.encode()).decode()}::{file_type}:ARZ_mock_handle_{session_id}"
-        return jsonify({'h': mock_handle}), 200
+        return jsonify({'h': mock.generate_file_handle(session_id, file_type)}), 200
 
     @app.route('/v<version>/<phone_number_id>/message_templates', methods=['POST', 'GET'])
     def message_templates(version, phone_number_id):
-        # Extract Bearer token from Authorization header
-        auth_header = request.headers.get('Authorization', '')
-        token = None
-        if auth_header.startswith('Bearer '):
-            token = auth_header.replace('Bearer ', '', 1)
-
-        if token != config.MOCK_ACCESS_TOKEN_1 and token != config.MOCK_ACCESS_TOKEN_2:
-            return jsonify({
-                'error': {
-                    'message': 'Invalid OAuth access token. Failed at endpoint /v<version>/<phone_number_id>/message_templates',
-                    'type': 'OAuthException',
-                    'code': 190,
-                    'fbtrace_id': 'mock_trace_id'
-                }
-            }), 401
+        if not mock.validate_bearer_token(request):
+            return jsonify(*mock.oauth_error(
+                'Invalid OAuth access token. Failed at endpoint /v<version>/<phone_number_id>/message_templates'
+            ))
         if request.method == 'POST':
-            # Create new template
-            data = request.get_json()
-
-            template_name = data.get('name', 'unnamed_template')
-            language = data.get('language', 'en')
-            category = data.get('category', 'MARKETING')
-            components = data.get('components', [])
-            template_id = str(random.randint(1000000000000000, 9999999999999999))
-            template_response = {
-                'name': template_name,
-                'components': components,
-                'language': language if '_' in language else f"{language}_US",
-                'status': 'APPROVED',
-                'category': category,
-                'id': template_id,
-                'quality_score': {
-                    'score': 'unknown'
-                }
-            }
-            try:
-                with open(os.path.join(config.ROOT_DIR,"mock_data/message_templates.json"),"r+") as f:
-                    json_data = f.read()
-                    templates = json.loads(json_data) if json_data else []
-                    templates.append(template_response)
-                    f.seek(0)
-                    json.dump(templates, f, indent=2)
-            except Exception as e:
-                logger.error(f"Error saving message template: {e}")
+            template = mock.create_template(request.get_json())
             logger.info(f"Create Message Template - Version: {version}, Phone ID: {phone_number_id}")
             return jsonify({
-                'id': template_id,
-                'status': 'APPROVED', # Automatically approve it for now
-                'data': [template_response],
-                'paging': {
-                    'cursors': {
-                        'before': 'MAZDZD',
-                        'after': 'MjQZD'
-                    }
-                }
+                'id': template['id'],
+                'status': 'APPROVED',
+                **mock.paged_response([template])
             }), 200
         if request.method == 'GET':
-            logger.info(f"Get Message - Templates - Version: {version}, Phone ID: {phone_number_id}")
-            try:
-                with open(os.path.join(config.ROOT_DIR, "mock_data/message_templates.json")) as f:
-                    json_data = f.read()
-                    templates = json.loads(json_data)
-
-            except Exception as e:
-                logger.error(f"Error loading message templates: {e}")
-            return jsonify({
-                'data': templates,
-                'paging': {
-                    'cursors': {
-                        'before': 'MAZDZD',
-                        'after': 'MjQZD'
-                    }
-                }
-            }), 200
+            logger.info(f"Get Message Templates - Version: {version}, Phone ID: {phone_number_id}")
+            templates = mock.load_templates()
+            return jsonify(mock.paged_response(templates)), 200
 
     @app.route('/v<version>/<template_id>', methods=['GET', 'POST'])
     def template_by_id(version, template_id):
-        auth_header = request.headers.get('Authorization', '')
-        token = None
-        if auth_header.startswith('Bearer '):
-            token = auth_header.replace('Bearer ', '', 1)
-        if token != config.MOCK_ACCESS_TOKEN_1 and token != config.MOCK_ACCESS_TOKEN_2:
-            return jsonify({
-                'error': {
-                    'message': 'Invalid OAuth access token.',
-                    'type': 'OAuthException',
-                    'code': 190,
-                    'fbtrace_id': 'mock_trace_id'
-                }
-            }), 401
-        templates_path = os.path.join(config.ROOT_DIR, "mock_data/message_templates.json")
+        if not mock.validate_bearer_token(request):
+            return jsonify(*mock.oauth_error())
         if request.method == 'POST':
             data = request.get_json()
-            components = data.get('components', [])
-            category = data.get('category')
+            mock.update_template(template_id, data)
             logger.info(f"Update Template - Version: {version}, Template ID: {template_id}")
-            try:
-                with open(templates_path, "r") as f:
-                    templates = json.loads(f.read() or "[]")
-                found = False
-                for t in templates:
-                    if t.get('id') == template_id:
-                        if components:
-                            t['components'] = components
-                        if category:
-                            t['category'] = category
-                        t['status'] = 'APPROVED'
-                        found = True
-                        break
-                if not found:
-                    templates.append({
-                        'id': template_id,
-                        'name': data.get('name', 'unnamed_template'),
-                        'components': components,
-                        'language': data.get('language', 'en_US'),
-                        'status': 'APPROVED',
-                        'category': category or 'UTILITY',
-                        'quality_score': {'score': 'unknown'}
-                    })
-                with open(templates_path, "w") as f:
-                    json.dump(templates, f, indent=2)
-            except Exception as e:
-                logger.error(f"Error updating template: {e}")
             return jsonify({'success': True}), 200
         if request.method == 'GET':
             logger.info(f"Get Template By ID - Version: {version}, Template ID: {template_id}")
-            try:
-                with open(templates_path, "r") as f:
-                    templates = json.loads(f.read() or "[]")
-                for t in templates:
-                    if t.get('id') == template_id:
-                        return jsonify(t), 200
-            except Exception as e:
-                logger.error(f"Error reading template: {e}")
-            # Template not found locally — return a generic approved response
-            # so Odoo's sync sees it as approved
-            logger.info(f"Template {template_id} not in mock data, returning auto-approved response")
-            return jsonify({
-                'id': template_id,
-                'name': 'unknown_template',
-                'components': [],
-                'language': 'en_US',
-                'status': 'APPROVED',
-                'category': 'UTILITY',
-                'quality_score': {'score': 'unknown'}
-            }), 200
+            template = mock.get_or_create_template(template_id)
+            return jsonify(template), 200
 
     @app.route('/set-odoo-whatsapp-webhook-account-1', methods=['POST'])
     def set_odoo_whatsapp_webhook_account_1():
@@ -236,140 +89,89 @@ def register_backend_routes(app):
         config.MOCK_WEBHOOK_TOKEN_1 = data.get('webhook_token')
         logger.info(f"Updated webhook token to: {config.MOCK_WEBHOOK_TOKEN_1}")
         return jsonify(data)
+
     @app.route('/set-odoo-whatsapp-webhook-account-2', methods=['POST'])
     def set_odoo_whatsapp_webhook_account_2():
         data = request.json
         config.MOCK_WEBHOOK_TOKEN_2 = data.get('webhook_token')
         logger.info(f"Updated webhook token to: {config.MOCK_WEBHOOK_TOKEN_2}")
         return jsonify(data)
-    
+
     @app.route('/send-manual-webhook-message', methods=['POST'])
     def send_manual_webhook():
-
         data = request.json
         account = data.get('account_type', False)
+        acct = mock.get_account_config(account)
 
+        phone_number_id = acct['phone_number_id']
+        app_secret = acct['app_secret']
+        waba_id = acct['waba_id']
         webhook_url = config.MOCK_WEBHOOK_URL
-        phone_number_id = config.MOCK_PHONE_NUMBER_ID_1 if account == 'account_1' else config.MOCK_PHONE_NUMBER_ID_2
-        access_token = config.MOCK_ACCESS_TOKEN_1 if account == 'account_1' else config.MOCK_ACCESS_TOKEN_2
-        webhook_token = config.MOCK_WEBHOOK_TOKEN_1 if account == 'account_1' else config.MOCK_WEBHOOK_TOKEN_2
+
         from_number = data.get('from_phone_number')
         message_text = data.get('message')
-        app_secret = config.MOCK_APP_SECRET_1 if account == 'account_1' else config.MOCK_APP_SECRET_2
-        app_id = config.MOCK_APP_ID_1 if account == 'account_1' else config.MOCK_APP_ID_2
-        waba_id = config.MOCK_WABA_ID_1 if account == 'account_1' else config.MOCK_WABA_ID_2
-        access_token = config.MOCK_ACCESS_TOKEN_1 if account == 'account_1' else config.MOCK_ACCESS_TOKEN_2
-        webhook_token = config.MOCK_WEBHOOK_TOKEN_1 if account == 'account_1' else config.MOCK_WEBHOOK_TOKEN_2
         parent_msg_id = data.get('parent_msg_id', False)
-       
-        values = values = {
-                "messaging_product": "whatsapp",
-                "metadata": {
-                    "display_phone_number": phone_number_id,
-                    "phone_number_id": phone_number_id
-                },
-                "contacts": [{
-                    "profile": {"name": "Dashboard User"},
-                    "wa_id": from_number
-                }],
-                "messages": [{
-                    "from": from_number,
-                    "id": f"wamid.manual_{random.randint(1000000, 9999999)}",
-                    "timestamp": str(int(time.time())),
-                    "text": {"body": message_text},
-                    "type": "text"
-                }]
-            }      
-        if parent_msg_id:
-            values = {
-                        "messaging_product": "whatsapp",
-                        "metadata": {
-                            "display_phone_number": phone_number_id,
-                            "phone_number_id": phone_number_id
-                        },
-                        "contacts": [{
-                            "profile": {"name": "Dashboard User"},
-                            "wa_id": from_number
-                        }],
-                        "messages": [{
-                            "from": from_number,
-                            "id": f"wamid.manual_{random.randint(1000000, 9999999)}",
-                            "timestamp": str(int(time.time())),
-                            "text": {"body": message_text},
-                            "type": "text",
-                        'context': {
-                            'id': parent_msg_id
-                        }
-                        }]
-                    }
-    
-
 
         logger.info(f"Manual message request - From: {from_number}, To webhook: {webhook_url}")
-                # Validate inputs
         if not all([webhook_url, phone_number_id, from_number, message_text]):
-            return jsonify({
-                'success': False,
-                'error': 'Missing required fields'
-            }), 400
-        
+            return jsonify({'success': False, 'error': 'Missing required fields'}), 400
+
+        message = {
+            "from": from_number,
+            "id": f"wamid.manual_{random.randint(1000000, 9999999)}",
+            "timestamp": str(int(time.time())),
+            "text": {"body": message_text},
+            "type": "text"
+        }
+        if parent_msg_id:
+            message['context'] = {'id': parent_msg_id}
+
+        values = {
+            "messaging_product": "whatsapp",
+            "metadata": {
+                "display_phone_number": phone_number_id,
+                "phone_number_id": phone_number_id
+            },
+            "contacts": [{"profile": {"name": "Dashboard User"}, "wa_id": from_number}],
+            "messages": [message]
+        }
+
         webhook_payload = {
             "object": "whatsapp_business_account",
             "entry": [{
                 "id": waba_id if waba_id else phone_number_id,
-                "changes": [{
-                    "value": values,
-                    "field": "messages"
-                }]
+                "changes": [{"value": values, "field": "messages"}]
             }]
         }
-        # Generate X-Hub-Signature-256 header if app_secret is provided
-        headers = {'Content-Type': 'application/json'}
 
-        # Convert payload to JSON bytes (this MUST be the exact bytes sent)
+        headers = {'Content-Type': 'application/json'}
         payload_bytes = json.dumps(webhook_payload, separators=(',', ':')).encode('utf-8')
 
         if app_secret:
-            # Generate HMAC SHA256 signature from the exact payload bytes
             signature = hmac.new(
                 app_secret.encode('utf-8'),
                 msg=payload_bytes,
                 digestmod=hashlib.sha256
             ).hexdigest()
-
-            # Add signature header in the format: sha256=<hex_signature>
             headers['X-Hub-Signature-256'] = f'sha256={signature}'
             logger.info(f"Generated X-Hub-Signature-256: sha256={signature}")
             logger.info(f"Payload bytes length: {len(payload_bytes)}")
         else:
             logger.warning("No app_secret provided, skipping signature generation")
-        
-        # Send to webhook with custom headers
-        # IMPORTANT: Use 'data' not 'json' to send the exact bytes we signed
+
         try:
             import requests
-            response = requests.post(
-                webhook_url,
-                data=payload_bytes,  # Send exact bytes, not json parameter
-                headers=headers,
-                timeout=10
-            )
+            response = requests.post(webhook_url, data=payload_bytes, headers=headers, timeout=10)
             response.raise_for_status()
-
             logger.info(f"Manual message sent successfully to {webhook_url}")
             return jsonify({
                 'success': True,
                 'message': 'Message sent successfully',
                 'signature_included': bool(app_secret)
             }), 200
-
         except requests.exceptions.RequestException as e:
             logger.error(f"Failed to send manual message: {str(e)}")
-            return jsonify({
-                'success': False,
-                'error': str(e)
-            }), 500
-    
+            return jsonify({'success': False, 'error': str(e)}), 500
 
     @app.route('/v<version>/<phone_number_id>/messages', methods=['POST'])
     def send_message(version, phone_number_id):
@@ -377,11 +179,7 @@ def register_backend_routes(app):
         data = request.get_json()
         logger.info(f"Send Message Request - Version: {version}, Phone ID: {phone_number_id}")
         logger.info(f"Message Data: {data}")
-
-        # Extract recipient and message details
         to_number = data.get('to', '')
-
-        # Return success response
         return jsonify({
             'messaging_product': 'whatsapp',
             'contacts': [{'input': to_number, 'wa_id': to_number}],

@@ -74,7 +74,7 @@
     "language": "en_US",
     "status": "APPROVED",
     "category": "MARKETING",
-    "id": "6668325432417575",
+    "id": "6668325432417576",
     "quality_score": {
       "score": "unknown"
     }
@@ -253,6 +253,22 @@
     "status": "APPROVED",
     "category": "MARKETING",
     "id": "7195922590744941",
+    "quality_score": {
+      "score": "unknown"
+    }
+  },
+  {
+    "name": "test_task",
+    "components": [
+      {
+        "type": "BODY",
+        "text": "test task 1"
+      }
+    ],
+    "language": "en_US",
+    "status": "APPROVED",
+    "category": "MARKETING",
+    "id": "1483865688772169",
     "quality_score": {
       "score": "unknown"
     }
