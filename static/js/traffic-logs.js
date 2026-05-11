@@ -16,6 +16,14 @@ socket.on('new_traffic_log', (data) => {
     trafficLogs.unshift(data);
     renderAllLogs(trafficLogs);
 });
+
+socket.on('update_traffic_log', (data) => {
+    const index = trafficLogs.findIndex(log => log.timestamp === data.timestamp && log.path === data.path);
+    if (index !== -1) {
+        trafficLogs[index] = data;
+        renderAllLogs(trafficLogs);
+    }
+});
 async function loadTemplate(url) {
     const response = await fetch(url);
     return await response.text();
@@ -98,6 +106,7 @@ async function renderAllLogs(logs) {
                     .replace("{{path}}", log.path)
                     .replace("{{methodClass}}", methodClass)
                     .replace("{{method}}", log.method)
+                    .replace("{{status_code}}", log.status_code || 'N/A')
                     .replace("{{messageHTML}}", messageHTML);
 
                 container.appendChild(div);
