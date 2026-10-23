@@ -15,3 +15,9 @@ US Test Numbers
 📍 Boston, MA – +1 617-555-0643
 📍 Miami, FL – +1 305-555-0758
 📍 Denver, CO – +1 303-555-0862
+International Test Numbers
+📍 Kenya (KE) – +254 700 000 000
+📍 Zambia (ZM) – +260 970 000 000
+📍 Lebanon (LB) – Generate using phonenumbers.example_number_for_type("LB", phonenumbers.PhoneNumberType.MOBILE)
+📍 Uganda (UG) – +256 770 000 000
+📍 Brazil (BR) – +55 11 91234-5678

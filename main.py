@@ -9,6 +9,7 @@ from backend.routes import register_backend_routes, register_backend_routes
 from flask_socketio import SocketIO, emit
 
 app = Flask(__name__)
+app.secret_key = 'dev-only-secret'  # Flask's session is a signed cookie
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 logging.basicConfig(level=logging.INFO)
