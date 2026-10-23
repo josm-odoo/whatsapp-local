@@ -1,4 +1,4 @@
-from flask import request, jsonify
+from flask import request, jsonify, redirect, session, url_for
 import logging
 import random
 import time
@@ -8,6 +8,10 @@ import json
 import os
 from datetime import datetime
 from configs import config
+
+import json
+import secrets
+from urllib.parse import urlencode
 
 
 logger = logging.getLogger(__name__)
@@ -306,3 +310,96 @@ def register_backend_routes(app):
             'contacts': [{'input': to_number, 'wa_id': to_number}],
             'messages': [{'id': f'mock_message_id_{random.randint(10000, 99999)}'}]
         }), 200
+
+    @app.route('/api/whatsapp/1/authorize', methods=['GET'])
+    def authorize():
+        back = {
+            'csrf_token': request.args['csrf_token'],
+            'authorization_code': 'FAKE_CODE',
+            'whatsapp_app_id': config.MOCK_PHONE_NUMBER_ID_1,
+            # 'error': 'subscription_error',  # uncomment to test the error page
+        }
+        return redirect(f"{request.args['return_url']}?{urlencode(back)}")
+
+    @app.route('/api/whatsapp/1/get_access_token', methods=['POST'])
+    def access_token():
+        data = jsonify({
+            'access_token': config.MOCK_PHONE_NUMBER_ID_1,
+        })
+        return data , 200
+
+
+    @app.route('/api/whatsapp/1/debug_token', methods=['POST'])
+    def debug_token():
+        return jsonify({
+            'data': {
+                'app_id': config.MOCK_APP_ID_1,
+                'is_valid': True,
+                'scopes': ['whatsapp_business_management', 'whatsapp_business_messaging'],
+                'granular_scopes': [
+                    {
+                        'scope': 'whatsapp_business_management',
+                        'target_ids': [config.MOCK_WABA_ID_1],
+                    },
+                    {
+                        'scope': 'whatsapp_business_messaging',
+                        'target_ids': [config.MOCK_WABA_ID_1],
+                    },
+                ],
+            },
+        }), 200
+
+    @app.route('/api/whatsapp/1/register_account', methods=['POST'])
+    def register_account():
+        return jsonify({
+            "webhook_url":config.MOCK_WEBHOOK_URL,
+            'shared_webhook_secret': config.MOCK_WEBHOOK_TOKEN_1,
+            'data': {
+                'app_id': config.MOCK_APP_ID_1,
+                'is_valid': True,
+                'scopes': ['whatsapp_business_management', 'whatsapp_business_messaging'],
+                'granular_scopes': [
+                    {
+                        'scope': 'whatsapp_business_management',
+                        'target_ids': [config.MOCK_WABA_ID_1],
+                    },
+                    {
+                        'scope': 'whatsapp_business_messaging',
+                        'target_ids': [config.MOCK_WABA_ID_1],
+                    },
+                ],
+            },
+        }), 200
+
+    @app.route('/v<version>/<phone_number_id>/subscribed_apps', methods=['POST'])
+    def post_account(version, phone_number_id):
+            return jsonify({'success':True
+                
+            }), 200
+
+    @app.route('/v<version>/<phone_number_id>/subscribed_apps', methods=['DELETE'])
+    def delete_account(version, phone_number_id):
+            return jsonify({'success':True
+                
+            }), 200
+    @app.route('/v<version>/<phone_number_id>/register', methods=['POST'])
+    def register(version, phone_number_id):
+            return jsonify({'success':True
+                
+            }), 200
+
+
+    @app.route('/api/whatsapp/1/unregister_account', methods=['POST'])
+    def unregister_account():
+        return jsonify({
+            
+        }), 200
+
+    @app.route('/v<version>/<phone_number_id>', methods=['GET'])
+    def get_account(version, phone_number_id):
+                return jsonify({
+                    'status':'CONNECTED',
+                    # 'webhook_configuration':{}
+                    
+                    
+                }), 200
