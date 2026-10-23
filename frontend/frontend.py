@@ -45,3 +45,8 @@ def register_frontend_routes(app,traffic_log):
             with open(template_path, 'r') as file:
                 return file.read()
         return "Template not found", 404
+
+    @app.route('/proxy')
+    def whatsapp_proxy_page():
+
+        return render_template('oauth-login.html', page_title='Oath')
